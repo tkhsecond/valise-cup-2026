@@ -129,6 +129,19 @@ body.tv-mode .footer{display:none}
  body.summary-screen .summary-matchno{margin-bottom:1px}
 }
 
+
+  /* Langer's oversized neon-green fly-by; purely visual and non-interactive. */
+  .langer-flyby{position:fixed;inset:0;z-index:99999;pointer-events:none;overflow:hidden}
+  .langer-flyby .langer-prop{position:absolute;top:10%;left:0;width:min(35vw,390px);height:min(70vh,590px);filter:drop-shadow(0 17px 11px rgba(0,0,0,.42));animation:langer-flight 3.7s cubic-bezier(.25,.1,.65,.95) both;transform-origin:center}
+  .langer-flyby svg{height:100%;width:100%;overflow:visible}
+  @keyframes langer-flight{
+    0%{transform:translate(-120vw,12vh) rotate(-63deg) scale(.6)}
+    18%{transform:translate(-55vw,-3vh) rotate(22deg) scale(1)}
+    36%{transform:translate(-9vw,19vh) rotate(-24deg) scale(1.16)}
+    54%{transform:translate(37vw,-3vh) rotate(18deg) scale(1.25)}
+    72%{transform:translate(83vw,16vh) rotate(-14deg) scale(1.12)}
+    100%{transform:translate(160vw,-10vh) rotate(55deg) scale(.8)}
+  }
 </style>
   
 </head>
@@ -310,6 +323,23 @@ body.tv-mode .footer{display:none}
     if(selected&&selected.team===team&&selected.id===id){selected=null;} else {selected={team,id};}
     renderRound();
   }
+
+  function launchLangerFlyby(){
+    document.querySelectorAll('.langer-flyby').forEach(el=>el.remove());
+    const overlay=document.createElement('div');
+    overlay.className='langer-flyby';
+    overlay.setAttribute('aria-hidden','true');
+    overlay.innerHTML=`<div class="langer-prop"><svg viewBox="0 0 220 390" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs><linearGradient id="langer-green" x1="0" x2="1"><stop stop-color="#117c17"/><stop offset=".26" stop-color="#39ed3d"/><stop offset=".57" stop-color="#7aff5a"/><stop offset=".85" stop-color="#18b82c"/><stop offset="1" stop-color="#086820"/></linearGradient></defs>
+      <rect x="57" y="14" width="106" height="309" rx="53" fill="url(#langer-green)" stroke="#095e17" stroke-width="5"/>
+      <ellipse cx="84" cy="333" rx="68" ry="54" fill="url(#langer-green)" stroke="#095e17" stroke-width="5"/>
+      <ellipse cx="145" cy="333" rx="68" ry="54" fill="url(#langer-green)" stroke="#095e17" stroke-width="5"/>
+      <path d="M87 42 C75 82 76 190 83 261" stroke="#e5ffbd" stroke-opacity=".6" stroke-width="12" stroke-linecap="round" fill="none"/>
+    </svg></div>`;
+    document.body.append(overlay);
+    overlay.addEventListener('animationend',()=>overlay.remove(),{once:true});
+  }
+
   function placePlayer(round,team,m,index,player){
     if(!player){
       const occupant=state.assignments[round][m][team][index];
@@ -326,6 +356,7 @@ body.tv-mode .footer{display:none}
     if(previous){state.assignments[round][previous.m][team][previous.index]=target;} // swap, if slot occupied
     match[team][index]=player.id;
     selected=null;commit();
+    if(team==='europe' && name(team,player.id).trim().toLocaleLowerCase()==='langer')launchLangerFlyby();
     const verb=target!==null?(previous?'Swapped':'Replaced'):'Assigned';
     notify(`${verb} ${name(team,player.id)} · Match ${String(m+1).padStart(2,'0')}`);
   }
