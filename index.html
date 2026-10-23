@@ -142,6 +142,10 @@ body.tv-mode .footer{display:none}
     72%{transform:translate(83vw,16vh) rotate(-14deg) scale(1.12)}
     100%{transform:translate(160vw,-10vh) rotate(55deg) scale(.8)}
   }
+
+  .michel-overlay{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.64);display:flex;align-items:center;justify-content:center;pointer-events:none;animation:michel-appear .15s ease-out; }
+  .michel-overlay img{max-width:min(80vw,660px);max-height:94vh;object-fit:contain;border:5px solid #fff;border-radius:10px;box-shadow:0 25px 100px rgba(0,0,0,.65)}
+  @keyframes michel-appear{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
 </style>
   
 </head>
@@ -324,6 +328,19 @@ body.tv-mode .footer{display:none}
     renderRound();
   }
 
+
+  let michelTimer=null;
+  function launchMichelOverlay(){
+    document.querySelectorAll('.michel-overlay').forEach(el=>el.remove());
+    if(michelTimer)clearTimeout(michelTimer);
+    const overlay=document.createElement('div');
+    overlay.className='michel-overlay';
+    const img=document.createElement('img');
+    img.src='michel-popup.jpg';img.alt='Michel celebration photo';
+    overlay.append(img);document.body.append(overlay);
+    michelTimer=setTimeout(()=>{overlay.remove();michelTimer=null;},3000);
+  }
+
   function launchLangerFlyby(){
     document.querySelectorAll('.langer-flyby').forEach(el=>el.remove());
     const overlay=document.createElement('div');
@@ -357,6 +374,7 @@ body.tv-mode .footer{display:none}
     match[team][index]=player.id;
     selected=null;commit();
     if(team==='europe' && name(team,player.id).trim().toLocaleLowerCase()==='langer')launchLangerFlyby();
+    if(team==='usa' && name(team,player.id).trim().toLocaleLowerCase()==='michel')launchMichelOverlay();
     const verb=target!==null?(previous?'Swapped':'Replaced'):'Assigned';
     notify(`${verb} ${name(team,player.id)} · Match ${String(m+1).padStart(2,'0')}`);
   }
