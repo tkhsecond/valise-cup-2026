@@ -75,6 +75,60 @@ body.tv-mode .footer{display:none}
  .summary-item{min-height:0!important}
 }
 
+
+/* Single-screen All Matches layout for a Mac mirrored/cast to a 16:9 TV.
+   Only the summary is compact; editable draft rounds retain their normal sizing. */
+@media (min-width:900px) {
+ body.summary-screen .masthead-inner{min-height:70px;padding:5px 18px}
+ body.summary-screen .masthead h1{font-size:clamp(25px,2.4vw,37px)}
+ body.summary-screen .edition,body.summary-screen .eyebrow{font-size:8px;margin:0}
+ body.summary-screen .subtitle{font-size:9px;margin:1px}
+ body.summary-screen .origin-photo{height:48px;width:48px}
+ body.summary-screen .app-content{padding-top:0;padding-bottom:0}
+ body.summary-screen .toolbar{min-height:0;margin:4px 0}
+ body.summary-screen .toolbar .tab{min-height:31px;padding:5px 12px;font-size:11px}
+ body.summary-screen .toolbar-buttons button{min-height:30px;padding-top:3px;padding-bottom:3px}
+ body.summary-screen .status-line{padding:3px 6px;margin:2px 0}
+ body.summary-screen .summary-view{min-height:0}
+ body.summary-screen .summary-head{padding:4px 6px 5px}
+ body.summary-screen .summary-head h2{font-size:23px;margin:0}
+ body.summary-screen .summary-head p{display:none}
+ body.summary-screen .summary-total strong{font-size:25px}
+ body.summary-screen .summary-content{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:5px 0}
+ body.summary-screen .summary-section-head{min-height:0;padding:5px 8px}
+ body.summary-screen .summary-section-head h3{font-size:clamp(16px,1.2vw,21px)}
+ body.summary-screen .summary-subtitle{font-size:8px;margin-top:0}
+ body.summary-screen .summary-grid{grid-template-columns:1fr;gap:2px;padding:4px}
+ body.summary-screen .summary-item{min-height:0;padding:3px 6px;gap:3px}
+ body.summary-screen .summary-matchno{font-size:8px;line-height:1;margin-bottom:2px;padding-bottom:1px}
+ body.summary-screen .summary-names{font-size:clamp(10px,.78vw,13px);line-height:1.08}
+ body.summary-screen .summary-vs{font-size:11px}
+ body.summary-screen .footer{display:none}
+}
+@media (min-width:900px) and (max-height:850px) {
+ body.summary-screen .masthead-inner{min-height:55px;padding:3px 12px}
+ body.summary-screen .masthead h1{font-size:27px}
+ body.summary-screen .origin-photo{height:38px;width:40px}
+ body.summary-screen .toolbar{margin:2px 0}
+ body.summary-screen .toolbar .tab{min-height:28px;padding:3px 9px}
+ body.summary-screen .summary-head{padding:2px 4px}
+ body.summary-screen .summary-head h2{font-size:20px}
+ body.summary-screen .summary-content{gap:5px;padding:3px 0}
+ body.summary-screen .summary-section-head{padding:3px 7px}
+ body.summary-screen .summary-section-head h3{font-size:17px}
+ body.summary-screen .summary-grid{padding:3px;gap:1px}
+ body.summary-screen .summary-item{padding:2px 5px}
+ body.summary-screen .summary-names{font-size:11px;line-height:1.05}
+ body.summary-screen .summary-matchno{font-size:7px}
+}
+@media (min-width:900px) and (max-height:660px){
+ body.summary-screen .eyebrow,body.summary-screen .subtitle,body.summary-screen .origin-photo,body.summary-screen .summary-head p,body.summary-screen .status-line{display:none}
+ body.summary-screen .masthead-inner{min-height:38px;padding:2px 10px}
+ body.summary-screen .masthead h1{font-size:23px}
+ body.summary-screen .summary-item{padding:1px 4px}
+ body.summary-screen .summary-matchno{margin-bottom:1px}
+}
+
 </style>
   
 </head>
@@ -290,6 +344,7 @@ body.tv-mode .footer{display:none}
     byId('undo-btn').disabled=undoHistory.length===0;
     byId('round-view').hidden=activeTab==='summary';
     byId('summary-view').hidden=activeTab!=='summary';
+    document.body.classList.toggle('summary-screen',activeTab==='summary');
     byId('clear-round-btn').hidden=activeTab==='summary';
   }
   function renderRoster(round,team){
